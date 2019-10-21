@@ -29,7 +29,7 @@ func IsColon(ch rune) bool { return (ch == colon) }
 // IsOctothorpe validates that the current rune is a '#'.
 func IsOctothorpe(ch rune) bool { return (ch == octothorpe) }
 
-// Consume leading whitespace from the reader.
+// ConsumeWS consumes leading whitespace from the reader.
 func (p *Parser) ConsumeWS() error {
 	for {
 		if !IsWhitespace(p.Peek()) {

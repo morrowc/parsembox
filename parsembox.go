@@ -45,6 +45,7 @@ func (p *Parser) Unread() error {
 	return p.reader.UnreadRune()
 }
 
+// Peek peeks ahead one rune in the Reader.
 func (p *Parser) Peek() rune {
 	ch, _, err := p.Read()
 	// Any error during Peek, which is reading an open file, is EOF, return eof.
