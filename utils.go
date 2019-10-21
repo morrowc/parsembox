@@ -1,5 +1,8 @@
 package parsembox
 
+// Utilities necessary for the parsembox package, but which do not
+// belong in the main code base.
+
 // IsLetter validates that the rune is a letter.
 func IsLetter(ch rune) bool {
 	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
