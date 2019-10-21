@@ -61,13 +61,13 @@ func (p *Parser) Peek() rune {
 
 // findFrom finds the start of an mbox message, returning the From address.
 // Leave the read pointer at the newline before the messages headers.
-func (p *Parser) findFrom() (string, error) {
-	var buf bytes.Buffer
+func (p *Parser) findFrom() (string, string, error) {
+	var from, date bytes.Buffer
 	// Start by consuming all leading whitespace.
 	err := p.ConsumeWS()
 	if err != nil {
 		fmt.Printf("failed during consuming whitespace: %v\n", err)
-		return "", err
+		return "", "", err
 	}
 
 	// Next read chars until there are 5 chars: From<space>
@@ -75,47 +75,62 @@ func (p *Parser) findFrom() (string, error) {
 		ch, _, err := p.Read()
 		if err != nil {
 			fmt.Printf("failed during attempt to find From<space>: %v\n", err)
-			return "", err
+			return "", "", err
 		}
 		if IsLetter(ch) && ch == 'F' {
 			ch, _, err := p.Read()
 			if err != nil {
 				fmt.Printf("failed to read letter after F: %v\n", err)
-				return "", err
+				return "", "", err
 			}
 			if IsLetter(ch) && ch == 'r' {
 				ch, _, err := p.Read()
 				if err != nil {
 					fmt.Printf("failed to read letter after r: %v\n", err)
-					return "", err
+					return "", "", err
 				}
 				if IsLetter(ch) && ch == 'o' {
 					ch, _, err := p.Read()
 					if err != nil {
 						fmt.Printf("failed to read letter after o: %v\n", err)
-						return "", err
+						return "", "", err
 					}
 					if IsLetter(ch) && ch == 'm' {
 						ch, _, err := p.Read()
 						if err != nil {
 							fmt.Printf("failed to read letter after m: %v\n", err)
-							return "", err
+							return "", "", err
 						}
 						if IsSpace(ch) {
 							if err != nil {
 								fmt.Printf("failed to read letter after m: %v\n", err)
-								return "", err
+								return "", "", err
 							}
-							// Read til the next newline char, storing in buf as the address.
+							// Read til the next whitespace char, storing in from as the address.
 							for {
 								ch, _, err := p.Read()
 								if err != nil {
-									fmt.Printf("read address failed, got(%v): %v\n", buf, err)
-									return "", err
+									fmt.Printf("read address failed, got(%v): %v\n", from.String(), err)
+									return "", "", err
 								}
-								_, _ = buf.WriteRune(ch)
+								_, _ = from.WriteRune(ch)
+								if IsWhitespace(p.Peek()) {
+									break
+								}
+							}
+
+							// Read til a newline, store all data as date.
+							// TODO(morrowc): decide if failing is appropriate if there is
+							// no date data to return.
+							for {
+								ch, _, err := p.Read()
+								if err != nil {
+									fmt.Printf("read date failed, got(%v): %v\n", date.String(), err)
+									return "", "", err
+								}
+								_, _ = date.WriteRune(ch)
 								if IsNewline(p.Peek()) {
-									return buf.String(), nil
+									return from.String(), date.String(), nil
 								}
 							}
 						}
@@ -124,10 +139,15 @@ func (p *Parser) findFrom() (string, error) {
 			}
 		}
 	}
-	return "", nil
+	return "", "", nil
 }
 
 // Next returns the next message in the mbox stream.
 func (p *Parser) Next() (*string, error) {
-	return nil, nil
+	from, _, err := p.findFrom()
+	if err != nil {
+		return nil, err
+	}
+
+	return &from, nil
 }
