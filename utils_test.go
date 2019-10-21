@@ -90,3 +90,34 @@ func TestIsWhitespace(t *testing.T) {
 		}
 	}
 }
+
+func TestIsSpace(t *testing.T) {
+	tests := []struct {
+		desc string
+		char rune
+		want bool
+	}{{
+		desc: "Is <space>",
+		char: ' ',
+		want: true,
+	}, {
+		desc: "Is f",
+		char: 'f',
+		want: false,
+	}, {
+		desc: "Is <tab>",
+		char: '	',
+		want: false,
+	}, {
+		desc: "Is <newline>",
+		char: '',
+		want: false,
+	}}
+
+	for _, test := range tests {
+		got := IsSpace(test.char)
+		if got != test.want {
+			t.Errorf("[%v]: failed to got/want comparison got/want: %v/%v", test.desc, got, test.want)
+		}
+	}
+}
