@@ -38,7 +38,6 @@ func NewParser(fd io.Reader) *Parser {
 func (p *Parser) String() string {
 	b := make([]byte, 1024)
 	l, _ := p.reader.Read(b)
-	fmt.Printf("Read %d chars from the reader (of 1k possible)\n", l)
 	return string(b[:l])
 }
 
