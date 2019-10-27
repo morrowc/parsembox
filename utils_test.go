@@ -216,6 +216,9 @@ func TestConsumeWS(t *testing.T) {
 	}, {
 		desc: "Success - with no ws",
 		input: "i	",
+	}, {
+		desc:  "Get Err from empty input",
+		input: "",
 	}}
 
 	ws := []string{" ", "\n", "\t"}
