@@ -3,6 +3,8 @@ package parsembox
 import (
 	"strings"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestIsLetter(t *testing.T) {
@@ -231,6 +233,35 @@ func TestConsumeWS(t *testing.T) {
 				if strings.HasPrefix(p.String(), c) {
 					t.Errorf("[%v]: did not remove all expected WS(%v): *%v*", test.desc, ws, test.input)
 				}
+			}
+		}
+	}
+}
+
+func TestConsumeToNewline(t *testing.T) {
+	tests := []struct {
+		desc    string
+		input   string
+		want    string
+		wantErr bool
+	}{{
+		desc:  "Success",
+		input: " this is\nstop here\n",
+		want:  "stop here\n",
+	}}
+
+	for _, test := range tests {
+		p := NewParser(strings.NewReader(test.input))
+		err := p.consumeToNewline()
+		switch {
+		case err != nil && !test.wantErr:
+			t.Errorf("[%v]: test got error when not expecting one: %v", test.desc, err)
+		case err == nil && test.wantErr:
+			t.Errorf("[%v]: test did not get error when expecting one", test.desc)
+		case err == nil:
+			got := p.String()
+			if !cmp.Equal(got, test.want) {
+				t.Errorf("[%v]: got/want mismatch: got/want\n%v", test.desc, cmp.Diff(got, test.want))
 			}
 		}
 	}
