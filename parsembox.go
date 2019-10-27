@@ -35,6 +35,12 @@ func NewParser(fd io.Reader) *Parser {
 	}
 }
 
+func (p *Parser) String() string {
+	var b []byte
+	_, _ = p.reader.Read(b)
+	return string(b)
+}
+
 // Read exports the ReadRune() method from bufio.Reader, used to read a single rune at a time.
 func (p *Parser) Read() (rune, int, error) {
 	return p.reader.ReadRune()
