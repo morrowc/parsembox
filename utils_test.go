@@ -248,6 +248,14 @@ func TestConsumeToNewline(t *testing.T) {
 		desc:  "Success",
 		input: " this is\nstop here\n",
 		want:  "stop here\n",
+	}, {
+		desc:    "Report Error from reader beyond newline",
+		input:   " ",
+		wantErr: true,
+	}, {
+		desc:    "Report Error from reader death",
+		input:   "",
+		wantErr: true,
 	}}
 
 	for _, test := range tests {
