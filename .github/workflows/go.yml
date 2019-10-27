@@ -28,7 +28,7 @@ jobs:
       run: go test ./...
 
     - name: TestCoverage
-      run: go test -v -coverprofile=coverage.out -covermode=count ./...
+      run: go test -v -coverprofile=coverage.out -covermode=count ./... ; sed -i "s/_$(pwd|sed 's///\//g')/./g" coverage.out
 
     - name: CovertCoverage
       uses: jandelgado/gcov2lcov-action@v1.0.0
