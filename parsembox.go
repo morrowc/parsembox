@@ -68,6 +68,7 @@ func (p *Parser) Peek() rune {
 
 // findFrom finds the start of an mbox message, returning the From address.
 // Leave the read pointer at the newline before the messages headers.
+// TODO(morrowc): This function seems like it could be recursive. Make it so.
 func (p *Parser) findFrom() (string, string, error) {
 	var from, date bytes.Buffer
 	// Start by consuming all leading whitespace.
