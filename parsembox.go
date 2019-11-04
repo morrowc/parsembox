@@ -153,5 +153,10 @@ func (p *Parser) Next() (*string, error) {
 		return nil, err
 	}
 
+	// If the next char is a newline, consume it and read until the next "From "
+	if p.IsNewline(p.Peek()) {
+		fmt.Printf("Past From: %v\n", from)
+	}
+
 	return &from, nil
 }
