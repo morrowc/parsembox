@@ -38,6 +38,18 @@ func TestFindFrom(t *testing.T) {
 		desc:    "Error raises, no content",
 		input:   "",
 		wantErr: true,
+	}, {
+		desc:    "Error raises, F",
+		input:   "F",
+		wantErr: true,
+	}, {
+		desc:    "Error raises, Fr",
+		input:   "Fr",
+		wantErr: true,
+	}, {
+		desc:    "Error raises, Fro",
+		input:   "Fro",
+		wantErr: true,
 	}}
 
 	for _, test := range tests {
