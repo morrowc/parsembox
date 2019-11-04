@@ -110,10 +110,6 @@ func (p *Parser) findFrom() (string, string, error) {
 							return "", "", err
 						}
 						if IsSpace(ch) {
-							if err != nil {
-								fmt.Printf("failed to read letter after m: %v\n", err)
-								return "", "", err
-							}
 							// Read til the next whitespace char, storing in from as the address.
 							for {
 								ch, _, err := p.Read()
