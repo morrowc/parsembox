@@ -58,6 +58,10 @@ func TestFindFrom(t *testing.T) {
 		desc:    "Error raises, Fro",
 		input:   "Fro",
 		wantErr: true,
+	}, {
+		desc: "Whitespace only",
+		input: " 	 ",
+		wantErr: true,
 	}}
 
 	for _, test := range tests {
