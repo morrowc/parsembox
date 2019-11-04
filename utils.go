@@ -1,38 +1,38 @@
 package parsembox
 
-// IsLetter validates that the rune is a letter.
-func IsLetter(ch rune) bool {
+// isLetter validates that the rune is a letter.
+func isLetter(ch rune) bool {
 	return (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')
 }
 
-// IsDigit validates that the rune is a number.
-func IsDigit(ch rune) bool {
+// isDigit validates that the rune is a number.
+func isDigit(ch rune) bool {
 	return (ch >= '0' && ch <= '9')
 }
 
-// IsWhitespace validates if the rune is a space, newline, or tab.
-func IsWhitespace(ch rune) bool {
+// isWhitespace validates if the rune is a space, newline, or tab.
+func isWhitespace(ch rune) bool {
 	return ch == ' ' || ch == '\t' || ch == '\n'
 }
 
-// IsSpace validates if the rune is a space.
-func IsSpace(ch rune) bool {
+// isSpace validates if the rune is a space.
+func isSpace(ch rune) bool {
 	return ch == ' '
 }
 
-// IsNewline validates if the rune is a newline.
-func IsNewline(ch rune) bool { return ch == '\n' }
+// isNewline validates if the rune is a newline.
+func isNewline(ch rune) bool { return ch == '\n' }
 
-// IsColon validates that the rune is a ':'.
-func IsColon(ch rune) bool { return (ch == colon) }
+// isColon validates that the rune is a ':'.
+func isColon(ch rune) bool { return (ch == colon) }
 
-// IsOctothorpe validates that the current rune is a '#'.
-func IsOctothorpe(ch rune) bool { return (ch == octothorpe) }
+// isOctothorpe validates that the current rune is a '#'.
+func isOctothorpe(ch rune) bool { return (ch == octothorpe) }
 
-// ConsumeWS consumes leading whitespace from the reader.
-func (p *Parser) ConsumeWS() error {
+// consumeWS consumes leading whitespace from the reader.
+func (p *Parser) consumeWS() error {
 	for {
-		if !IsWhitespace(p.Peek()) {
+		if !isWhitespace(p.Peek()) {
 			return nil
 		}
 		_, _, err := p.Read()
@@ -45,7 +45,7 @@ func (p *Parser) ConsumeWS() error {
 // consumeToNewline reads all content until a newline rune is encountered.
 func (p *Parser) consumeToNewline() error {
 	for {
-		if IsNewline(p.Peek()) {
+		if isNewline(p.Peek()) {
 			_, _, err := p.Read()
 			if err != nil {
 				return err

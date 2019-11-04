@@ -72,7 +72,7 @@ func (p *Parser) Peek() rune {
 func (p *Parser) findFrom() (string, string, error) {
 	var from, date bytes.Buffer
 	// Start by consuming all leading whitespace.
-	err := p.ConsumeWS()
+	err := p.consumeWS()
 	if err != nil {
 		fmt.Printf("failed during consuming whitespace: %v\n", err)
 		return "", "", err
@@ -85,31 +85,31 @@ func (p *Parser) findFrom() (string, string, error) {
 			fmt.Printf("failed during attempt to find From<space>: %v\n", err)
 			return "", "", err
 		}
-		if IsLetter(ch) && ch == 'F' {
+		if isLetter(ch) && ch == 'F' {
 			ch, _, err := p.Read()
 			if err != nil {
 				fmt.Printf("failed to read letter after F: %v\n", err)
 				return "", "", err
 			}
-			if IsLetter(ch) && ch == 'r' {
+			if isLetter(ch) && ch == 'r' {
 				ch, _, err := p.Read()
 				if err != nil {
 					fmt.Printf("failed to read letter after r: %v\n", err)
 					return "", "", err
 				}
-				if IsLetter(ch) && ch == 'o' {
+				if isLetter(ch) && ch == 'o' {
 					ch, _, err := p.Read()
 					if err != nil {
 						fmt.Printf("failed to read letter after o: %v\n", err)
 						return "", "", err
 					}
-					if IsLetter(ch) && ch == 'm' {
+					if isLetter(ch) && ch == 'm' {
 						ch, _, err := p.Read()
 						if err != nil {
 							fmt.Printf("failed to read letter after m: %v\n", err)
 							return "", "", err
 						}
-						if IsSpace(ch) {
+						if isSpace(ch) {
 							// Read til the next whitespace char, storing in from as the address.
 							for {
 								ch, _, err := p.Read()
@@ -118,7 +118,7 @@ func (p *Parser) findFrom() (string, string, error) {
 									return "", "", err
 								}
 								_, _ = from.WriteRune(ch)
-								if IsWhitespace(p.Peek()) {
+								if isWhitespace(p.Peek()) {
 									break
 								}
 							}
@@ -133,7 +133,7 @@ func (p *Parser) findFrom() (string, string, error) {
 									return "", "", err
 								}
 								_, _ = date.WriteRune(ch)
-								if IsNewline(p.Peek()) {
+								if isNewline(p.Peek()) {
 									return from.String(), date.String(), nil
 								}
 							}
@@ -154,7 +154,7 @@ func (p *Parser) Next() (*string, error) {
 	}
 
 	// If the next char is a newline, consume it and read until the next "From "
-	if IsNewline(p.Peek()) {
+	if isNewline(p.Peek()) {
 		fmt.Printf("Past From: %v\n", from)
 	}
 

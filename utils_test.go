@@ -31,7 +31,7 @@ func TestIsLetter(t *testing.T) {
 	}}
 
 	for _, test := range tests {
-		got := IsLetter(test.char)
+		got := isLetter(test.char)
 		if got != test.want {
 			t.Errorf("[%v]: failed to got/want comparison got/want: %v/%v", test.desc, got, test.want)
 		}
@@ -62,7 +62,7 @@ func TestIsDigit(t *testing.T) {
 	}}
 
 	for _, test := range tests {
-		got := IsDigit(test.char)
+		got := isDigit(test.char)
 		if got != test.want {
 			t.Errorf("[%v]: failed to got/want comparison got/want: %v/%v", test.desc, got, test.want)
 		}
@@ -89,7 +89,7 @@ func TestIsWhitespace(t *testing.T) {
 	}}
 
 	for _, test := range tests {
-		got := IsWhitespace(test.char)
+		got := isWhitespace(test.char)
 		if got != test.want {
 			t.Errorf("[%v]: failed to got/want comparison got/want: %v/%v", test.desc, got, test.want)
 		}
@@ -120,7 +120,7 @@ func TestIsSpace(t *testing.T) {
 	}}
 
 	for _, test := range tests {
-		got := IsSpace(test.char)
+		got := isSpace(test.char)
 		if got != test.want {
 			t.Errorf("[%v]: failed to got/want comparison got/want: %v/%v", test.desc, got, test.want)
 		}
@@ -143,7 +143,7 @@ func TestIsNewline(t *testing.T) {
 	}}
 
 	for _, test := range tests {
-		got := IsNewline(test.char)
+		got := isNewline(test.char)
 		if got != test.want {
 			t.Errorf("[%v]: got/want mismatch, got: %v want: %v", test.desc, got, test.want)
 		}
@@ -166,7 +166,7 @@ func TestIsColon(t *testing.T) {
 	}}
 
 	for _, test := range tests {
-		got := IsColon(test.char)
+		got := isColon(test.char)
 		if got != test.want {
 			t.Errorf("[%v]: got/want mismatch, got: %v want: %v", test.desc, got, test.want)
 		}
@@ -189,7 +189,7 @@ func TestIsOctothorpe(t *testing.T) {
 	}}
 
 	for _, test := range tests {
-		got := IsOctothorpe(test.char)
+		got := isOctothorpe(test.char)
 		if got != test.want {
 			t.Errorf("[%v]: got/want mismatch, got: %v want: %v", test.desc, got, test.want)
 		}
@@ -225,7 +225,7 @@ func TestConsumeWS(t *testing.T) {
 
 	for _, test := range tests {
 		p := NewParser(strings.NewReader(test.input))
-		err := p.ConsumeWS()
+		err := p.consumeWS()
 		switch {
 		case err != nil && !test.wantErr:
 			t.Errorf("[%v]: test got error when not expecting one: %v", test.desc, err)
