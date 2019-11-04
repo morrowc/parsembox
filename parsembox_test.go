@@ -35,6 +35,10 @@ func TestFindFrom(t *testing.T) {
 		input:   "From",
 		wantErr: true,
 	}, {
+		desc:    "Error, only From<space>",
+		input:   "From ",
+		wantErr: true,
+	}, {
 		desc:    "Error raises, no from",
 		input:   "123klasjd8 2j1asd ds Fro ather this From: athing  \noo@bar.org\n",
 		wantErr: true,
