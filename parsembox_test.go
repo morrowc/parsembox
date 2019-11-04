@@ -34,6 +34,10 @@ func TestFindFrom(t *testing.T) {
 		desc:    "Error raises, no from",
 		input:   "123klasjd8 2j1asd ds Fro ather this From: athing  \noo@bar.org\n",
 		wantErr: true,
+	}, {
+		desc:    "Error raises, no content",
+		input:   "",
+		wantErr: true,
 	}}
 
 	for _, test := range tests {
