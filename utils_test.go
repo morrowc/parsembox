@@ -277,3 +277,158 @@ func TestConsumeToNewline(t *testing.T) {
 		}
 	}
 }
+
+func TestIsPunctuation(t *testing.T) {
+	tests := []struct {
+		desc string
+		char rune
+		want bool
+	}{{
+		desc: "excalamation",
+		char: '!',
+		want: true,
+	}, {
+		desc: "atsign",
+		char: '@',
+		want: true,
+	}, {
+		desc: "sharp",
+		char: '#',
+		want: true,
+	}, {
+		desc: "dollar",
+		char: '$',
+		want: true,
+	}, {
+		desc: "percent",
+		char: '%',
+		want: true,
+	}, {
+		desc: "carrot",
+		char: '^',
+		want: true,
+	}, {
+		desc: "ampersand",
+		char: '&',
+		want: true,
+	}, {
+		desc: "asterick",
+		char: '*',
+		want: true,
+	}, {
+		desc: "left paren",
+		char: '(',
+		want: true,
+	}, {
+		desc: "right paren",
+		char: ')',
+		want: true,
+	}, {
+		desc: "underscore",
+		char: '_',
+		want: true,
+	}, {
+		desc: "plus",
+		char: '+',
+		want: true,
+	}, {
+		desc: "minus",
+		char: '-',
+		want: true,
+	}, {
+		desc: "equal",
+		char: '=',
+		want: true,
+	}, {
+		desc: "left bracket",
+		char: '[',
+		want: true,
+	}, {
+		desc: "right bracket",
+		char: ']',
+		want: true,
+	}, {
+		desc: "backslash",
+		char: '\\',
+		want: true,
+	}, {
+		desc: "left curly",
+		char: '{',
+		want: true,
+	}, {
+		desc: "right curly",
+		char: '}',
+		want: true,
+	}, {
+		desc: "pipe",
+		char: '|',
+		want: true,
+	}, {
+		desc: "colon",
+		char: ':',
+		want: true,
+	}, {
+		desc: "semi-colon",
+		char: ';',
+		want: true,
+	}, {
+		desc: "double quote",
+		char: '"',
+		want: true,
+	}, {
+		desc: "single quote",
+		char: '\'',
+		want: true,
+	}, {
+		desc: "left angle",
+		char: '<',
+		want: true,
+	}, {
+		desc: "right angle",
+		char: '>',
+		want: true,
+	}, {
+		desc: "comma",
+		char: ',',
+		want: true,
+	}, {
+		desc: "period",
+		char: '.',
+		want: true,
+	}, {
+		desc: "fwd slash",
+		char: '/',
+		want: true,
+	}, {
+		desc: "question mark",
+		char: '?',
+		want: true,
+	}, {
+		desc: "backtick",
+		char: '`',
+		want: true,
+	}, {
+		desc: "tilde",
+		char: '~',
+		want: true,
+	}, {
+		desc: "letter",
+		char: 'y',
+		want: false,
+	}, {
+		desc: "numbe",
+		char: '2',
+		want: false,
+	}, {
+		desc: "space",
+		char: ' ',
+		want: false,
+	}}
+
+	for _, test := range tests {
+		got := isPunctuation(test.char)
+		if got != test.want {
+			t.Errorf("[%v]: got/want mismatch: %v/%v", test.desc, got, test.want)
+		}
+	}
+}

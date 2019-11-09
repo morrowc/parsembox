@@ -29,7 +29,6 @@ func isPunctuation(ch rune) bool {
 		'\\': true, '{': true, '}': true, '|': true,
 		':': true, ';': true, '"': true, '\'': true,
 		'<': true, '>': true, ',': true, '.': true,
-		'<': true, '>': true, ',': true, '.': true,
 		'/': true, '?': true, '`': true, '~': true,
 	}
 	return p[ch]
