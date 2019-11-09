@@ -66,7 +66,7 @@ func TestFindFrom(t *testing.T) {
 
 	for _, test := range tests {
 		p := NewParser(strings.NewReader(test.input))
-		gotFrom, _, err := p.findFrom()
+		gotFrom, _, err := p.FindFrom()
 
 		switch {
 		case err != nil && !test.wantErr:

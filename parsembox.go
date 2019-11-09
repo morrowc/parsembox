@@ -6,6 +6,8 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"strings"
+	"time"
 )
 
 /*
@@ -66,10 +68,10 @@ func (p *Parser) Peek() rune {
 	return ch
 }
 
-// findFrom finds the start of an mbox message, returning the From address.
+// FindFrom finds the start of an mbox message, returning the From address.
 // Leave the read pointer at the newline before the messages headers.
 // TODO(morrowc): This function seems like it could be recursive. Make it so.
-func (p *Parser) findFrom() (string, string, error) {
+func (p *Parser) FindFrom() (string, string, error) {
 	var from, date bytes.Buffer
 	// Start by consuming all leading whitespace.
 	err := p.consumeWS()
@@ -148,7 +150,13 @@ func (p *Parser) findFrom() (string, string, error) {
 
 // Next returns the next message in the mbox stream.
 func (p *Parser) Next() (*string, error) {
-	from, _, err := p.findFrom()
+	// email-from / date
+	from, d, err := p.FindFrom()
+	if err != nil {
+		return nil, err
+	}
+
+	dstmp, err := time.Parse("Mon Jan 2 15:04:05 2006", strings.TrimLeft(d, " 	"))
 	if err != nil {
 		return nil, err
 	}
@@ -156,6 +164,7 @@ func (p *Parser) Next() (*string, error) {
 	// If the next char is a newline, consume it and read until the next "From "
 	if isNewline(p.Peek()) {
 		fmt.Printf("Past From: %v\n", from)
+		fmt.Printf("Date: %v\n", dstmp)
 	}
 
 	return &from, nil
