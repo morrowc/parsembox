@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 var (
@@ -108,6 +110,51 @@ func TestNext(t *testing.T) {
 		case err == nil:
 			if *got != test.want {
 				t.Errorf("[%v]: test got/want are not equal got/want:From %v/%v", test.desc, *got, test.want)
+			}
+		}
+	}
+}
+
+func TestReadWord(t *testing.T) {
+	tests := []struct {
+		desc    string
+		input   string
+		want    []rune
+		wantErr bool
+	}{{
+		desc:  "Success",
+		input: " this ",
+		want:  []rune("this"),
+	}, {
+		desc:  "Success no leading whitespace",
+		input: "this ",
+		want:  []rune("this"),
+	}, {
+		desc:  "Success punctatio in word",
+		input: "thi!s ",
+		want:  []rune("thi!s"),
+	}, {
+		desc:  "Success punctatio end of word",
+		input: "this! ",
+		want:  []rune("this!"),
+	}, {
+		desc:    "Error nothing but whitespace",
+		input:   "    ",
+		wantErr: true,
+	}, {
+		desc:    "Zero input should error",
+		wantErr: true,
+	}}
+
+	for _, test := range tests {
+		p := NewParser(strings.NewReader(test.input))
+		got, err := p.readWord()
+		switch {
+		case err != nil && !test.wantErr:
+		case err == nil && test.wantErr:
+		case err == nil:
+			if !cmp.Equal(got, test.want) {
+				t.Errorf("[%v]: got/want mismatch: (+got/-want\n%v\n", test.desc, cmp.Diff(got, test.want))
 			}
 		}
 	}
