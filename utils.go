@@ -20,6 +20,21 @@ func isSpace(ch rune) bool {
 	return ch == ' '
 }
 
+func isPunctuation(ch rune) bool {
+	p := map[rune]bool{
+		'!': true, '@': true, '#': true, '$': true,
+		'%': true, '^': true, '&': true, '*': true,
+		'(': true, ')': true, '_': true, '+': true,
+		'-': true, '=': true, '[': true, ']': true,
+		'\\': true, '{': true, '}': true, '|': true,
+		':': true, ';': true, '"': true, '\'': true,
+		'<': true, '>': true, ',': true, '.': true,
+		'<': true, '>': true, ',': true, '.': true,
+		'/': true, '?': true, '`': true, '~': true,
+	}
+	return p[ch]
+}
+
 // isNewline validates if the rune is a newline.
 func isNewline(ch rune) bool { return ch == '\n' }
 
