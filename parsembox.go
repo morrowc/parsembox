@@ -4,6 +4,7 @@ package parsembox
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -66,6 +67,28 @@ func (p *Parser) Peek() rune {
 		return eof
 	}
 	return ch
+}
+
+// readWord will read runes until whitespace is encountered and return
+// the slice of runes which make up the 'word'.
+func (p *Parser) readWord() ([]rune, error) {
+	var w []rune
+	if err := p.consumeWS(); err != nil {
+		return nil, err
+	}
+	for {
+		ch, _, err := p.Read()
+		if err != nil {
+			return nil, err
+		}
+		if isWhitespace(ch) || isNewline(ch) || isSpace(ch) {
+			return w, nil
+		}
+		if isDigit(ch) || isLetter(ch) || isPunctuation(ch) {
+			w = append(w, ch)
+		}
+	}
+	return nil, errors.New("failed to find a word")
 }
 
 // FindFrom finds the start of an mbox message, returning the From address.
