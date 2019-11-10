@@ -91,16 +91,18 @@ func (p *Parser) readWord() ([]rune, error) {
 	return nil, errors.New("failed to find a word")
 }
 
-// FindFrom finds the start of an mbox message, returning the From address.
-// Leave the read pointer at the newline before the messages headers.
-// TODO(morrowc): This function seems like it could be recursive. Make it so.
-func (p *Parser) FindFrom() (string, string, error) {
+// FindFrom reads a Parser until it finds a proper mbox From.
+// All data read prior to the From is assumed to be a message.
+// NOTE: no check of message content/syntax is performed, the caller
+// must perform these checks themselves.
+func (p *Parser) FindFrom() ([]rune, string, string, error) {
+	var msg []rune
 	var from, date bytes.Buffer
 	// Start by consuming all leading whitespace.
 	err := p.consumeWS()
 	if err != nil {
 		fmt.Printf("failed during consuming whitespace: %v\n", err)
-		return "", "", err
+		return msg, "", "", err
 	}
 
 	// Next read chars until there are 5 chars: From<space>
@@ -108,31 +110,33 @@ func (p *Parser) FindFrom() (string, string, error) {
 		ch, _, err := p.Read()
 		if err != nil {
 			fmt.Printf("failed during attempt to find From<space>: %v\n", err)
-			return "", "", err
+			return msg, "", "", err
 		}
+		msg = append(msg, ch)
+
 		if isLetter(ch) && ch == 'F' {
 			ch, _, err := p.Read()
 			if err != nil {
 				fmt.Printf("failed to read letter after F: %v\n", err)
-				return "", "", err
+				return msg, "", "", err
 			}
 			if isLetter(ch) && ch == 'r' {
 				ch, _, err := p.Read()
 				if err != nil {
 					fmt.Printf("failed to read letter after r: %v\n", err)
-					return "", "", err
+					return msg, "", "", err
 				}
 				if isLetter(ch) && ch == 'o' {
 					ch, _, err := p.Read()
 					if err != nil {
 						fmt.Printf("failed to read letter after o: %v\n", err)
-						return "", "", err
+						return msg, "", "", err
 					}
 					if isLetter(ch) && ch == 'm' {
 						ch, _, err := p.Read()
 						if err != nil {
 							fmt.Printf("failed to read letter after m: %v\n", err)
-							return "", "", err
+							return msg, "", "", err
 						}
 						if isSpace(ch) {
 							// Read til the next whitespace char, storing in from as the address.
@@ -140,7 +144,7 @@ func (p *Parser) FindFrom() (string, string, error) {
 								ch, _, err := p.Read()
 								if err != nil {
 									fmt.Printf("read address failed, got(%v): %v\n", from.String(), err)
-									return "", "", err
+									return msg, "", "", err
 								}
 								_, _ = from.WriteRune(ch)
 								if isWhitespace(p.Peek()) {
@@ -155,11 +159,11 @@ func (p *Parser) FindFrom() (string, string, error) {
 								ch, _, err := p.Read()
 								if err != nil {
 									fmt.Printf("read date failed, got(%v): %v\n", date.String(), err)
-									return "", "", err
+									return msg, "", "", err
 								}
 								_, _ = date.WriteRune(ch)
 								if isNewline(p.Peek()) {
-									return from.String(), date.String(), nil
+									return msg, from.String(), date.String(), nil
 								}
 							}
 						}
@@ -168,13 +172,13 @@ func (p *Parser) FindFrom() (string, string, error) {
 			}
 		}
 	}
-	return "", "", nil
+	return msg, "", "", nil
 }
 
 // Next returns the next message in the mbox stream.
 func (p *Parser) Next() (*string, error) {
 	// email-from / date
-	from, d, err := p.FindFrom()
+	msg, from, d, err := p.FindFrom()
 	if err != nil {
 		return nil, err
 	}
@@ -188,6 +192,7 @@ func (p *Parser) Next() (*string, error) {
 	if isNewline(p.Peek()) {
 		fmt.Printf("Past From: %v\n", from)
 		fmt.Printf("Date: %v\n", dstmp)
+		fmt.Printf("Msg Length: %v\n", len(msg))
 	}
 
 	return &from, nil
