@@ -4,7 +4,6 @@ package parsembox
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"fmt"
 	"io"
 	"strings"
@@ -88,7 +87,6 @@ func (p *Parser) readWord() ([]rune, error) {
 			w = append(w, ch)
 		}
 	}
-	return nil, errors.New("failed to find a word")
 }
 
 // FindFrom reads a Parser until it finds a proper mbox From.
@@ -172,7 +170,6 @@ func (p *Parser) FindFrom() ([]rune, string, string, error) {
 			}
 		}
 	}
-	return msg, "", "", nil
 }
 
 // Next returns the next message in the mbox stream.
